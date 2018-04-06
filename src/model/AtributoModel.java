@@ -3,6 +3,7 @@ package model;
 public class AtributoModel {
 
 	private String serieCFD;
+	
 	private String folioCFD;
 	
 	public AtributoModel(String serieCFD, String folioCFD) {
