@@ -50,8 +50,8 @@ public class TestClient {
 	private void Consulta() throws IOException{
 		String serie="", folio="",cadena="", respuesta="";
 		int cont=0;
-//		boolean validaCon = descarga(host, userHost, passHost, archivoEntrada, remoteFile1);
-		boolean validaCon = true;
+		boolean validaCon = descarga(host, userHost, passHost, archivoEntrada, remoteFile1);
+//		boolean validaCon = true;
 		if(validaCon) {
 			FileReader f = new FileReader(archivoEntrada);
 			BufferedReader b = new BufferedReader(f);
@@ -168,7 +168,7 @@ public class TestClient {
 			
 			FileWriter fstream = new FileWriter(archivoPaso, true);
 			BufferedWriter out = new BufferedWriter(fstream);
-
+			
 			String respuesta = ProcesarJSON.procesaJson(lineaXML);
 			
 			if(respuesta != null) {
@@ -181,7 +181,7 @@ public class TestClient {
 			initialStream.close();
 			out.close();
 
-		} catch (Exception ex) {
+		} catch (IOException ex) {
 			System.out.println("Error: "+ex.getMessage());
 		}
 	}

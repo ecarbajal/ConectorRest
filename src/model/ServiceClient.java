@@ -36,7 +36,7 @@ public class ServiceClient {
 		client.setWriteTimeout(30000, TimeUnit.MILLISECONDS);
 		
 		Response response = client.newCall(request).execute();
-		System.out.println(request.toString());
+		//System.out.println(request.toString());
 		rb = response.body();
 		rt  = rb.string();
 		//System.out.println(rt); //se imprime el valor del json
