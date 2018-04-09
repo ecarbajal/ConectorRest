@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.stream.MalformedJsonException;
 
 /**
  * @author Eduardo Carbajal Reyes
@@ -31,15 +32,23 @@ public class ProcesarJSON {
 	static JsonElement datos = null;
 	 
 	public static String procesaJson(String json) {
+
 		continuar = true;
 		datos = parser.parse(json);
+		try {
+			procesoElementoJson(datos);
+		} catch (com.google.gson.JsonSyntaxException e) {
+			System.out.println("Error de lectura de Json");
+		} catch (MalformedJsonException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		procesoElementoJson(datos);
 
 		return linea;
 	}
 
-	private static void procesoElementoJson(JsonElement elemento) {
+	private static void procesoElementoJson(JsonElement elemento)  throws com.google.gson.stream.MalformedJsonException {
 		 if (elemento.isJsonObject() && elemento != null && continuar) {
 //		        System.out.println("Es objeto");
 		        JsonObject obj = elemento.getAsJsonObject();

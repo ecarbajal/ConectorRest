@@ -55,7 +55,7 @@ public class TestClient {
 		if(validaCon) {
 			FileReader f = new FileReader(archivoEntrada);
 			BufferedReader b = new BufferedReader(f);
-//			descarga(server, userServ, passServ, archivoPaso,archivoSalida);
+			descarga(server, userServ, passServ, archivoPaso,archivoSalida);
 			while((cadena = b.readLine())!=null) {
 				//System.out.println(cadena);
 				if(cadena.length()>1996) {
@@ -73,8 +73,8 @@ public class TestClient {
 				System.out.println("Registro: " + cont);
 			}
 			System.out.println("Archivo generado.");
-//			boolean SubeArch = subirFichero(server,userServ, passServ,archivoPaso,archivoSalida);
-			boolean SubeArch = true;
+			boolean SubeArch = subirFichero(server,userServ, passServ,archivoPaso,archivoSalida);
+//			boolean SubeArch = true;
 			if (SubeArch) {
 				//if (true) {
 					System.out.println("Archivo depositado en Servidor.");
@@ -182,37 +182,6 @@ public class TestClient {
 			out.close();
 
 		} catch (IOException ex) {
-			System.out.println("Error: "+ex.getMessage());
-		}
-	}
-
-	private void CargaDatos(String serie, String folio, String[] variables2,String archivoPaso) {
-		try {
-			InputStream initialStream = new FileInputStream(new File(archivoPaso));
-			BufferedReader reader = new BufferedReader(new InputStreamReader(initialStream));
-			StringBuilder xml = new StringBuilder();
-			String line;
-
-			while ((line = reader.readLine()) != null) {
-				xml.append(line);
-			}			    
-			FileWriter fstream = new FileWriter(archivoPaso, true);
-			BufferedWriter out = new BufferedWriter(fstream);
-			if(variables2[3].indexOf("code")>-1) // NO SE ENCUENTRA
-				out.write(serie + "|"+ folio + "|" + variables2[7]+"\r\n"); 
-			else if(variables2[3].indexOf("Asociando")>-1) { // ASOCIANDO
-				out.write(serie + "|"+ folio + "|" + variables2[3]+"\r\n");
-			}else if(variables2[7].indexOf("codigo")>-1){
-				out.write(serie + "|"+ folio + "|" + "Documento no encontrado" +"\r\n");
-			}
-			else {
-				out.write(serie + "|"+ folio + "|" + variables2[27] + "|" + variables2[39] + "|" + variables2[51] + "|" + variables2[55] + "|" +variables2[11]+ "|" + variables2[63] +"\r\n");
-			}
-			reader.close();
-			initialStream.close();
-			out.close();
-
-		} catch (Exception ex) {
 			System.out.println("Error: "+ex.getMessage());
 		}
 	}
