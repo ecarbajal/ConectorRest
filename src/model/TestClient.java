@@ -20,11 +20,9 @@ import org.apache.commons.net.ftp.*;
 
 
 public class TestClient {
-	private String[] variables;
-	private String salida = "C:\\ConectorREST\\data\\salida.txt";
 	private String archivoSalida="\\Informacion-Fiscal\\Autos\\FacmanUUID\\Cifras_UUID.txt";
 	//	private String archivoSalida="\\Informacion-Fiscal\\Auto\\FacmanUUID\\Cifras_UUID pruebas.txt";
-	
+
 	private String archivoEntrada = "C:\\ConectorREST\\data\\entrada.txt";
 	//private String archivoPaso = "C:\\ConectorREST\\data\\Cifras_UUID pruebas.txt";
 	private String archivoPaso = "C:\\ConectorREST\\data\\Cifras_UUID.txt";
@@ -34,9 +32,9 @@ public class TestClient {
 	private String host="150.23.1.13";
 	private String userHost="tv6jcg";
 	private String passHost="mexico15";
-//	private String userHost="TV6RMQ";
-//	private String passHost="KMC03KMC";
-//	private String remoteFile1 = "\'DGA.EARCX801'"; // DESARROLLO 
+	//	private String userHost="TV6RMQ";
+	//	private String passHost="KMC03KMC";
+	//	private String remoteFile1 = "\'DGA.EARCX801'"; // DESARROLLO 
 	private String remoteFile1 = "\'PGA.EARCX801'"; // PRODUCCION
 	private static FTPClient cliente = new FTPClient();
 
@@ -44,14 +42,13 @@ public class TestClient {
 	public static void main(String[] args) throws IOException {
 		TestClient tc = new TestClient();
 		tc.Consulta();		
-
 	}
 
 	private void Consulta() throws IOException{
 		String serie="", folio="",cadena="", respuesta="";
 		int cont=0;
 		boolean validaCon = descarga(host, userHost, passHost, archivoEntrada, remoteFile1);
-//		boolean validaCon = true;
+		//		boolean validaCon = true;
 		if(validaCon) {
 			FileReader f = new FileReader(archivoEntrada);
 			BufferedReader b = new BufferedReader(f);
@@ -59,26 +56,26 @@ public class TestClient {
 			while((cadena = b.readLine())!=null) {
 				//System.out.println(cadena);
 				if(cadena.length()>1996) {
-				serie=cadena.substring(1975,1985).trim();
-				folio=cadena.substring(1986, 1996).trim();
-				AtributoModel am = new AtributoModel(serie,folio);
-				ServiceClient sc = new ServiceClient();
-				respuesta = sc.invokeService(am, serie, folio);
-//				System.out.println("RESPUESTA: "+respuesta);
+					serie=cadena.substring(1975,1985).trim();
+					folio=cadena.substring(1986, 1996).trim();
+					AtributoModel am = new AtributoModel(serie,folio);
+					ServiceClient sc = new ServiceClient();
+					respuesta = sc.invokeService(am, serie, folio);
+					//				System.out.println("RESPUESTA: "+respuesta);
 
 
-				CargarDatos(respuesta);
+					CargarDatos(respuesta);
 				}
 				cont++;
 				System.out.println("Registro: " + cont);
 			}
 			System.out.println("Archivo generado.");
 			boolean SubeArch = subirFichero(server,userServ, passServ,archivoPaso,archivoSalida);
-//			boolean SubeArch = true;
+			//			boolean SubeArch = true;
 			if (SubeArch) {
 				//if (true) {
-					System.out.println("Archivo depositado en Servidor.");
-					/*File f1 = new File(salida);
+				System.out.println("Archivo depositado en Servidor.");
+				/*File f1 = new File(salida);
 					f1.delete();*/
 				/*} else {
 					System.out.println("No se pudo subir Archivo al Servidor");
@@ -104,25 +101,25 @@ public class TestClient {
 					File downloadFile1 = new File(archivo);
 					BufferedOutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(downloadFile1));				
 					ind = cliente.retrieveFile(remoteFile1, outputStream1);
-//					cliente.deleteFile(remoteFile1);
+					//					cliente.deleteFile(remoteFile1);
 					outputStream1.close();
 					//ind=true;
-					
+
 					System.out.println(ind ? "Descarga completa" : "No descargo");
-					
+
 				}else {
 					System.out.println("Usuario o contraseña incorrectos.");
 				}
 			}else {
 				System.out.println("Error conexión");
 			}
-			
+
 		} catch (SocketException e) {
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
-		
+
 		return ind;
 	}
 
@@ -138,7 +135,7 @@ public class TestClient {
 		}catch(NullPointerException npe) {
 			System.out.println("Error al iniciar sesion.");
 		}
-		
+
 		if(statusLogin){
 			cliente.enterLocalPassiveMode();
 			cliente.setFileType(FTP.BINARY_FILE_TYPE);
@@ -147,7 +144,7 @@ public class TestClient {
 			if (FTPReply.isPositiveCompletion(respuesta) == true) {
 				is = new BufferedInputStream(new FileInputStream(pathFich));
 				fichSubido = cliente.storeFile(fich, is); 
-//				cliente.deleteFile(fich);
+				//				cliente.deleteFile(fich);
 				fichSubido = cliente.appendFile(fich,is);
 				is.close();
 				return fichSubido;
@@ -160,23 +157,21 @@ public class TestClient {
 		}
 	}
 
-	
+
 	private void CargarDatos(String lineaXML) {
 		try {
 			InputStream initialStream = new FileInputStream(new File(archivoPaso));
 			BufferedReader reader = new BufferedReader(new InputStreamReader(initialStream));
-			
+
 			FileWriter fstream = new FileWriter(archivoPaso, true);
 			BufferedWriter out = new BufferedWriter(fstream);
-			
+
 			String respuesta = ProcesarJSON.procesaJson(lineaXML);
-			
+
 			if(respuesta != null) {
 				out.write(respuesta+"\r\n");
 			}
 
-			
-			
 			reader.close();
 			initialStream.close();
 			out.close();
