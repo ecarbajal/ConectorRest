@@ -20,12 +20,12 @@ import org.apache.commons.net.ftp.*;
 
 
 public class TestClient {
-	private String archivoSalida="\\Informacion-Fiscal\\Autos\\FacmanUUID\\Cifras_UUID.txt";
+	private String archivoSalida="\\Informacion-Fiscal\\Autos\\FacmanUUID\\Cifras_UUID_C.txt";
 	//	private String archivoSalida="\\Informacion-Fiscal\\Auto\\FacmanUUID\\Cifras_UUID pruebas.txt";
 
-	private String archivoEntrada = "C:\\ConectorREST\\data\\entrada.txt";
+	private String archivoEntrada = "C:\\ConectorREST\\data_cad_corta\\entrada.txt";
 	//private String archivoPaso = "C:\\ConectorREST\\data\\Cifras_UUID pruebas.txt";
-	private String archivoPaso = "C:\\ConectorREST\\data\\Cifras_UUID.txt";
+	private String archivoPaso = "C:\\ConectorREST\\data_cad_corta\\Cifras_UUID.txt";
 	private String server="150.23.1.10";
 	private String userServ="ftprseguro";
 	private String passServ="frseguro";
@@ -34,8 +34,8 @@ public class TestClient {
 	private String passHost="mexico15";
 	//	private String userHost="TV6RMQ";
 	//	private String passHost="KMC03KMC";
-	//	private String remoteFile1 = "\'DGA.EARCX801'"; // DESARROLLO 
-	private String remoteFile1 = "\'PGA.EARCX801'"; // PRODUCCION
+    private String remoteFile1 = "\'DNO.EOCGWN01'"; // DESARROLLO 
+//	private String remoteFile1 = "\'PGA.EARCX801'"; // PRODUCCION
 	private static FTPClient cliente = new FTPClient();
 
 
@@ -48,30 +48,27 @@ public class TestClient {
 		String serie="", folio="",cadena="", respuesta="";
 		int cont=0;
 		boolean validaCon = descarga(host, userHost, passHost, archivoEntrada, remoteFile1);
-		//		boolean validaCon = true;
+//				boolean validaCon = true;
 		if(validaCon) {
 			FileReader f = new FileReader(archivoEntrada);
 			BufferedReader b = new BufferedReader(f);
-			descarga(server, userServ, passServ, archivoPaso,archivoSalida);
-			while((cadena = b.readLine())!=null) {
-				//System.out.println(cadena);
-				if(cadena.length()>1996) {
-					serie=cadena.substring(1975,1985).trim();
-					folio=cadena.substring(1986, 1996).trim();
-					AtributoModel am = new AtributoModel(serie,folio);
-					ServiceClient sc = new ServiceClient();
-					respuesta = sc.invokeService(am, serie, folio);
-					//				System.out.println("RESPUESTA: "+respuesta);
+			//descarga(server, userServ, passServ, archivoPaso,archivoSalida);
+			while ((cadena = b.readLine()) != null) {
+				// System.out.println(cadena);
+				serie = cadena.substring(39, 43).trim();
+				folio = cadena.substring(49, cadena.length()).trim();
+				AtributoModel am = new AtributoModel(serie, folio);
+				ServiceClient sc = new ServiceClient();
+				respuesta = sc.invokeService(am, serie, folio);
 
+				CargarDatos(respuesta);
 
-					CargarDatos(respuesta);
-				}
 				cont++;
 				System.out.println("Registro: " + cont);
 			}
 			System.out.println("Archivo generado.");
 			boolean SubeArch = subirFichero(server,userServ, passServ,archivoPaso,archivoSalida);
-			//			boolean SubeArch = true;
+//						boolean SubeArch = true;
 			if (SubeArch) {
 				//if (true) {
 				System.out.println("Archivo depositado en Servidor.");
